@@ -27,13 +27,28 @@ function App() {
     navigate("/");
   }
 
+  function deleteReport(id) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this report?"
+    );
+
+    if (confirmed) {
+      setReports((currentReports) =>
+        currentReports.filter((report) => report.id !== id)
+      );
+    }
+  }
+
   return (
     <div className="min-h-screen bg-slate-100 pb-20">
       <Header />
 
       <main className="p-4">
         <Routes>
-          <Route path="/" element={<ReportsPage reports={reports} />} />
+          <Route
+            path="/"
+            element={<ReportsPage reports={reports} deleteReport={deleteReport} />}
+          />
           <Route
             path="/new-report"
             element={<NewReportPage addReport={addReport} />}

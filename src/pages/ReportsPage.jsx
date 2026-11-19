@@ -1,4 +1,6 @@
-function ReportsPage({ reports }) {
+import { Button } from "@/components/ui/button";
+
+function ReportsPage({ reports, deleteReport }) {
   if (reports.length === 0) {
     return (
       <div>
@@ -18,6 +20,15 @@ function ReportsPage({ reports }) {
           <p className="text-sm text-emerald-700">{report.category}</p>
           <p className="text-sm text-slate-600">{report.description}</p>
           <p className="mt-1 text-xs text-slate-400">{report.date}</p>
+
+          <Button
+            type="button"
+            variant="destructive"
+            className="mt-3"
+            onClick={() => deleteReport(report.id)}
+          >
+            Delete
+          </Button>
         </div>
       ))}
     </div>
