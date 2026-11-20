@@ -1,6 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 function ReportsPage({ reports, deleteReport }) {
+  const navigate = useNavigate();
+
   if (reports.length === 0) {
     return (
       <div>
@@ -21,14 +24,22 @@ function ReportsPage({ reports, deleteReport }) {
           <p className="text-sm text-slate-600">{report.description}</p>
           <p className="mt-1 text-xs text-slate-400">{report.date}</p>
 
-          <Button
-            type="button"
-            variant="destructive"
-            className="mt-3"
-            onClick={() => deleteReport(report.id)}
-          >
-            Delete
-          </Button>
+          <div className="mt-3 flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate("/edit/" + report.id)}
+            >
+              Edit
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => deleteReport(report.id)}
+            >
+              Delete
+            </Button>
+          </div>
         </div>
       ))}
     </div>

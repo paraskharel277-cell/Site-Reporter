@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
 import ReportsPage from "@/pages/ReportsPage";
 import NewReportPage from "@/pages/NewReportPage";
+import EditReportPage from "@/pages/EditReportPage";
 
 function usePersistedState(key, defaultValue) {
   const [state, setState] = useState(() => {
@@ -33,10 +34,17 @@ function App() {
     );
 
     if (confirmed) {
-      setReports((currentReports) =>
-        currentReports.filter((report) => report.id !== id)
-      );
+      setReports(reports.filter((report) => report.id !== id));
     }
+  }
+
+  function updateReport(updatedReport) {
+    setReports(
+      reports.map((report) =>
+        report.id === updatedReport.id ? updatedReport : report
+      )
+    );
+    navigate("/");
   }
 
   return (
@@ -47,11 +55,19 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<ReportsPage reports={reports} deleteReport={deleteReport} />}
+            element={
+              <ReportsPage reports={reports} deleteReport={deleteReport} />
+            }
           />
           <Route
             path="/new-report"
             element={<NewReportPage addReport={addReport} />}
+          />
+          <Route
+            path="/edit/:id"
+            element={
+              <EditReportPage reports={reports} updateReport={updateReport} />
+            }
           />
         </Routes>
       </main>
