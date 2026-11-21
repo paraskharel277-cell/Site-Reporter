@@ -1,8 +1,22 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 function ReportsPage({ reports, deleteReport }) {
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("All");
+
+  const filteredReports = reports.filter((report) => {
+    const matchesSearch =
+      report.title.toLowerCase().includes(search.toLowerCase()) ||
+      report.description.toLowerCase().includes(search.toLowerCase());
+
+    const matchesCategory = filter === "All" || report.category === filter;
+
+    return matchesSearch && matchesCategory;
+  });
 
   if (reports.length === 0) {
     return (
@@ -17,7 +31,34 @@ function ReportsPage({ reports, deleteReport }) {
     <div className="space-y-3">
       <h2 className="text-lg font-bold">Reports</h2>
 
-      {reports.map((report) => (
+      <Input
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search reports"
+      />
+
+      <select
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        className="w-full rounded-md border bg-white p-2 text-sm"
+      >
+        <option>All</option>
+        <option>Fault</option>
+        <option>Wildlife</option>
+        <option>Maintenance</option>
+        <option>Fly-tipping</option>
+        <option>Other</option>
+      </select>
+
+      <p className="text-sm text-slate-500">
+        Showing {filteredReports.length} of {reports.length} reports
+      </p>
+
+      {filteredReports.length === 0 && (
+        <p className="text-slate-600">No reports match your search.</p>
+      )}
+
+      {filteredReports.map((report) => (
         <div key={report.id} className="rounded-md border bg-white p-3">
           <p className="font-semibold">{report.title}</p>
           <p className="text-sm text-emerald-700">{report.category}</p>
