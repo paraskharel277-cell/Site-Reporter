@@ -22,7 +22,7 @@ function ReportsPage({ reports, deleteReport }) {
     return (
       <div>
         <h2 className="text-lg font-bold">Reports</h2>
-        <p className="text-slate-600">No reports yet.</p>
+        <p>No reports yet.</p>
       </div>
     );
   }
@@ -40,7 +40,7 @@ function ReportsPage({ reports, deleteReport }) {
       <select
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
-        className="w-full rounded-md border bg-white p-2 text-sm"
+        className="w-full border p-2"
       >
         <option>All</option>
         <option>Fault</option>
@@ -50,20 +50,29 @@ function ReportsPage({ reports, deleteReport }) {
         <option>Other</option>
       </select>
 
-      <p className="text-sm text-slate-500">
+      <p className="text-sm">
         Showing {filteredReports.length} of {reports.length} reports
       </p>
 
-      {filteredReports.length === 0 && (
-        <p className="text-slate-600">No reports match your search.</p>
-      )}
+      {filteredReports.length === 0 && <p>No reports match your search.</p>}
 
       {filteredReports.map((report) => (
-        <div key={report.id} className="rounded-md border bg-white p-3">
-          <p className="font-semibold">{report.title}</p>
-          <p className="text-sm text-emerald-700">{report.category}</p>
-          <p className="text-sm text-slate-600">{report.description}</p>
-          <p className="mt-1 text-xs text-slate-400">{report.date}</p>
+        <div key={report.id} className="border bg-white p-3">
+          <p className="font-bold">{report.title}</p>
+          <p className="text-green-700">{report.category}</p>
+          <p>{report.description}</p>
+          <p className="text-sm">{report.date}</p>
+
+          {report.location && (
+            <a
+              href={report.location}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-green-700 underline"
+            >
+              View on map
+            </a>
+          )}
 
           <div className="mt-3 flex gap-2">
             <Button

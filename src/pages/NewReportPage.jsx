@@ -1,36 +1,56 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
 function NewReportPage({ addReport }) {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Fault");
   const [description, setDescription] = useState("");
-  const [error, setError] = useState("");
+  const [titleError, setTitleError] = useState("");
+  const [status, setStatus] = useState("");
+  const [link, setLink] = useState("");
+
+  const geoFindMe = () => {
+    if (!navigator.geolocation) {
+      setStatus("Geolocation is not supported by your browser");
+    } else {
+      setStatus("Locating...");
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+  };
+
+  const success = (position) => {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    setStatus("");
+    setLink(`https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`);
+  };
+
+  const error = () => {
+    setStatus("Unable to retrieve your location");
+  };
 
   function handleSubmit(event) {
     event.preventDefault();
 
     if (title.trim() === "") {
-      setError("Please enter a title.");
+      setTitleError("Please enter a title.");
       return;
     }
 
-    const newReport = {
+    addReport({
       id: Date.now(),
       title: title,
       category: category,
       description: description,
+      location: link,
       date: new Date().toLocaleDateString("en-GB"),
-    };
-
-    addReport(newReport);
-    setTitle("");
-    setCategory("Fault");
-    setDescription("");
-    setError("");
+    });
   }
 
   return (
@@ -43,9 +63,8 @@ function NewReportPage({ addReport }) {
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="For example: Damaged fence"
         />
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {titleError && <p className="text-red-600">{titleError}</p>}
       </div>
 
       <div className="space-y-2">
@@ -54,7 +73,7 @@ function NewReportPage({ addReport }) {
           id="category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full rounded-md border bg-white p-2 text-sm"
+          className="w-full border p-2"
         >
           <option>Fault</option>
           <option>Wildlife</option>
@@ -70,13 +89,34 @@ function NewReportPage({ addReport }) {
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe what you found"
         />
       </div>
 
-      <Button type="submit" className="w-full">
-        Save report
-      </Button>
+      <div className="space-y-2">
+        <Button type="button" variant="outline" onClick={geoFindMe}>
+          Use my location
+        </Button>
+
+        <p className="text-sm">{status}</p>
+
+        {link && (
+          <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green-700 underline"
+          >
+            Location added. View on map
+          </a>
+        )}
+      </div>
+
+      <div className="flex gap-2">
+        <Button type="submit">Save report</Button>
+        <Button type="button" variant="outline" onClick={() => navigate("/")}>
+          Cancel
+        </Button>
+      </div>
     </form>
   );
 }
