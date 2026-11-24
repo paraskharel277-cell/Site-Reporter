@@ -59,6 +59,7 @@ function ReportsPage({ reports, deleteReport }) {
       {filteredReports.map((report) => (
         <div key={report.id} className="border bg-white p-3">
           <p className="font-bold">{report.title}</p>
+          {report.photo && <img src={report.photo} alt="Report" className="w-full" />}
           <p className="text-green-700">{report.category}</p>
           <p>{report.description}</p>
           <p className="text-sm">{report.date}</p>
