@@ -5,6 +5,7 @@ import BottomNav from "@/components/BottomNav";
 import ReportsPage from "@/pages/ReportsPage";
 import NewReportPage from "@/pages/NewReportPage";
 import EditReportPage from "@/pages/EditReportPage";
+import OfflineBanner from "@/components/OfflineBanner";
 
 function usePersistedState(key, defaultValue) {
   const [state, setState] = useState(() => {
@@ -50,6 +51,7 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-100 pb-20">
       <Header />
+      <OfflineBanner />
 
       <main className="p-4">
         <Routes>
